@@ -1,0 +1,172 @@
+﻿<Window x:Class="HomeDeck.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" MinHeight="600" MinWidth="940" Height="600" Width="940"
+        Loaded="OnLoaded" SourceInitialized="OnSourceInitialized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0 File Buttons -->
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray" Height="50" >
+            <Button Name="btnFileOpen" Content="화일열기" Click="onMenuClick_FileOpen" FontSize="16"
+                    Width="120" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="20, 5, 0, 5" ></Button>
+            <Button Name="btnFileSave" Content="보관" Click="onMenuClick_FileSave" FontSize="16"
+                    Width="120" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="20, 5, 0, 5" ></Button>
+            <Button Name="btnExit" Content="끝내기" Click="onMenuClick_FileExit" FontSize="16"
+                    Width="120" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="20, 5, 0, 5" ></Button>
+            <Button Name="btnRotate90" Content="90도회전" Click="btnRotate90_Click"  FontSize="16"
+                    Width="120" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="30, 5, 0, 5" />
+            <ToggleButton Content="선그리기" Name ="chkLineDraw" Click="chkLineDraw_Click" Width="120"
+                          FontSize="16" HorizontalAlignment="Left" Margin="20, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <Button x:Name="Render" Content="대역조명" Height="30" VerticalAlignment="Top" Width="110" Margin="0,10,0,0" Click="RT_Render"/>
+        </DockPanel>
+        
+        <!-- Row 1 Render Window -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="280"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <!-- <RowDefinition Height="30"></RowDefinition>-->
+            </Grid.RowDefinitions>
+            <Border Grid.Column="0" Grid.Row="0" Name="wndRender" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Visibility="Visible" Margin="10, 5, 10, 5" BorderThickness="1" BorderBrush="Black">
+                <!-- IsVisibleChanged="wndRender_IsVisibleChanged">-->
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="속성" Click="onPopupMenu_Properties"></MenuItem>
+                        <MenuItem Header="안내" Click="onPopupMenu_Guide"></MenuItem>
+                        <MenuItem Header="삭제" Click="onPopupMenu_Delete"></MenuItem>
+                        <MenuItem Header="숨기기" Click="onPopupMenu_Hide"></MenuItem>
+                        <MenuItem Header="회전">
+                            <MenuItem Header=" 90도" Click="onPopupMenu_Rotate90"></MenuItem>
+                            <MenuItem Header="180도" Click="onPopupMenu_Rotate180"></MenuItem>
+                            <MenuItem Header="270도" Click="onPopupMenu_Rotate270"></MenuItem>
+                        </MenuItem>
+                        
+                    </ContextMenu>
+                </Border.ContextMenu>
+            </Border>
+            
+            <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Background="LightGray" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto"
+                          Margin="0, 0, 0, 5" BorderThickness="1" BorderBrush="Black" Height="{Binding Path=ActualHeight, ElementName=wndRender}">
+                <ScrollViewer.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Style.Triggers>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter Property="Width" Value="20"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ScrollViewer.Resources>
+                <ScrollViewer.Content>
+                    <StackPanel>
+                        <Label Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0,0,0" 
+                               FontWeight="Bold" FontSize="20" Foreground="RoyalBlue" VerticalContentAlignment="Center">재질화상렬</Label>
+                        <Grid Margin="10, 10, 10, 10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80"></RowDefinition>
+                                <RowDefinition Height="80"></RowDefinition>
+                                <RowDefinition Height="80"></RowDefinition>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <!-- Row 0 to 2 : Material Previews-->
+                            <Canvas Name="matSample1" Grid.Column="0" Grid.Row="0" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample1_MouseDown">
+                                
+                            </Canvas>
+                            <Canvas Name="matSample2" Grid.Column="1" Grid.Row="0" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample2_MouseDown"></Canvas>
+                            <Canvas Name="matSample3" Grid.Column="2" Grid.Row="0" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample3_MouseDown"></Canvas>
+                            <Canvas Name="matSample4" Grid.Column="0" Grid.Row="1" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample4_MouseDown"></Canvas>
+                            <Canvas Name="matSample5" Grid.Column="1" Grid.Row="1" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample5_MouseDown"></Canvas>
+                            <Canvas Name="matSample6" Grid.Column="2" Grid.Row="1" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample6_MouseDown"></Canvas>
+                            <Canvas Name="matSample7" Grid.Column="0" Grid.Row="2" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample7_MouseDown"></Canvas>
+                            <Canvas Name="matSample8" Grid.Column="1" Grid.Row="2" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample8_MouseDown"></Canvas>
+                            <Canvas Name="matSample9" Grid.Column="2" Grid.Row="2" Margin="2, 2, 2, 2" Background="#333333" MouseDown="MatSample9_MouseDown"></Canvas>
+
+                            <!-- Row 3: Material Page Buttons -->
+                            <Button Name="btnMatPrevPage" Grid.Column="0" Grid.Row="3" Content="&lt;" Margin="10,5,10,5" Click="OnClick_BtnMatPrevPage"></Button>
+                            <Label Name="matPageNo" Grid.Column="1" Grid.Row="3" Content="" FontWeight="Bold" FontSize="12" Foreground="#000000"
+                                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                            <Button Name="btnMatNextPage" Grid.Column="2" Grid.Row="3" Content="&gt;" Margin="10,5,10,5" Click="OnClick_BtnMatNextPage"></Button>
+
+                            <!-- Row 4: Add, Delete, Edit Buttons-->
+                            <Button Name="btnMatAdd" Grid.Column="0" Grid.Row="4" Content="추가..." Margin="10,5,10,5" Click="OnClick_BtnMatAdd"></Button>
+                            <Button Name="btnMatDelete" Grid.Column="1" Grid.Row="4" Content="삭제" Margin="10,5,10,5" Click="OnClick_BtnMatDelete"></Button>
+                            <Button Name="btnMatEdit" Grid.Column="2" Grid.Row="4" Content="편집..." Margin="10,5,10,5" Click="OnClick_BtnMatEdit"></Button>
+                        </Grid>
+                        <Label Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0,0,0"
+                               FontWeight="Bold" FontSize="16" Foreground="#000000" VerticalContentAlignment="Center">미리보기</Label>
+                        <Canvas Name="matPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Width="240" Height="240" Margin="10,10,10,10" Background="#333333"></Canvas>
+                        <Button Content="넘기기" Margin="10,5,10,5" Height="40" Click="OnClick_BtnMatApply"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Button>
+                        
+                        <!--<Grid Margin="10, 10, 10, 10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition Height="40"></RowDefinition>
+                            </Grid.RowDefinitions> -->
+                            <!-- Row 0: Texture Mapping Method -->
+                            <!-- <Label Grid.Column="0" Grid.Row="0" Content="문양화상격식:" Margin="10,0,0,0"
+                                    HorizontalContentAlignment="Right" VerticalContentAlignment="Center" ></Label>
+                            <ComboBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="10,5,10,5" SelectedIndex="0"
+                                    HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+                                <ComboBoxItem  Content="Spheric"></ComboBoxItem>
+                                <ComboBoxItem  Content="Cubic"></ComboBoxItem>
+                                    <ComboBoxItem  Content="Cylindric"></ComboBoxItem>
+                            </ComboBox> -->
+                            <!-- Row 1: Texture Tiling Values(U, V) -->
+                            <!-- <Label Grid.Column="0" Grid.Row="1" Content="Tiling(U, V):" Margin="10,0,0,0"
+                                    HorizontalContentAlignment="Right" VerticalContentAlignment="Center" ></Label>
+                            <TextBox Name="txtUTiling" Grid.Column="1" Grid.Row="1" Margin="10,5,10,5" Text="1.0"
+                                    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></TextBox>
+                            <TextBox Name="txtVTiling" Grid.Column="2" Grid.Row="1" Margin="10,5,10,5" Text="1.0"
+                                    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></TextBox> -->
+                            <!-- Row 2: Mapping Apply Button -->
+                            <!-- <Button Grid.ColumnSpan="3" Grid.Row="2" Content="문양넘기기" Margin="10,5,10,5" Click="OnClick_BtnMatApply"></Button> -->
+                        <!-- </Grid> -->
+                    </StackPanel>
+                </ScrollViewer.Content>
+            </ScrollViewer>
+        </Grid>
+        <!-- Row 2 View Buttons -->
+        <Slider Grid.Row="2" Name="sldScatter" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Margin="10, 5, 10, 5" ValueChanged="sldScatter_ValueChanged"></Slider>
+        <WrapPanel Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray">
+            <ToggleButton Content="종합보기" Name ="chkFourView" Click="chkFourView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="True"></ToggleButton>
+            <ToggleButton Content="내려보기" Name ="chkAirView" Click="chkAirView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <ToggleButton Content="정면보기" Name ="chkFrontView" Click="chkFrontView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <ToggleButton Content="측면보기" Name ="chkSideView" Click="chkSideView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <ToggleButton Content="립체보기" Name ="chkPerspectiveView" Click="chkPerspectiveView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <ToggleButton Content="투시도" Name ="chkWireframeView" Click="chkWireframeView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+            <ToggleButton Content="선골조보기" Name ="chkGeometryView" Click="chkGeometryView_Click" Width="120" Height="40"
+                          FontSize="16" HorizontalAlignment="Left" Margin="10, 5, 0, 5" IsChecked="False"></ToggleButton>
+        </WrapPanel>
+        
+    </Grid>
+</Window>
